@@ -1,6 +1,8 @@
 from getpass import getpass
 from mysql.connector import connect, Error
 
+
+
 try:
     with connect(
         host = "localhost",
@@ -20,6 +22,7 @@ try:
     CREATE TABLE table_IT_users
     """
     with connection.cursor() as cursor:
+        connection.reconnect()
         cursor.execute(CToEoRQ)
         connection.commit()
 except Error as e:
