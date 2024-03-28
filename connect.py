@@ -1,26 +1,13 @@
-from getpass import getpass
-from mysql.connector import connect, Error
-
-
+import pyodbc
+from datetime import datetime
 
 try:
-    with connect(
-        host = "localhost",
-        user = input("Имя пользователя: "),
-        password = getpass("Пароль: "),
-        database="tg_bot_db"
-    ) as connection:
-        print(connection)
-        CToEoRQ = """
-        CREATE TABLE table_staff(
-            id INT NOT NULL AUTO_INCREMENT,
-            id_staff INT NOT NULL,
-            familiya_staff VARCHAR(150),
-            imya_staff VARCHAR(150),
-            PRIMARY KEY (id)
-        """
-    with connection.cursor() as cursor:
-        cursor.execute(CToEoRQ)
-        connection.commit()
-except Error as e:
-    print(e)
+    class Sql:
+        def __init__(self, database, server="XXVIR00012,55000"):
+            self.cnxn = pyodbc.connect("Driver={SQL Server Native Client 11.0};"
+                                       "Server="+server+";"
+                                       "Database="+database+";"
+                                       "Trusted_Connection=yes;")
+            self.query = "-- {}\n\n-- Made in Python".format(datetime.now().strftime("%d/%m/%Y"))
+except Exception as ex:
+    print(ex)

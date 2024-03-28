@@ -1,6 +1,7 @@
 import telebot
 import tfb
 from telebot import types
+import sys
 
 
 T = telebot.TeleBot(tfb.token)
@@ -11,6 +12,7 @@ print("Я начал работу!")
 # Условные переменные
 SendMes = T.send_message
 RNSH = T.register_next_step_handler
+IDP = 0
 
 # Сообщение-обработчик события
 @T.message_handler(content_types=['text'])
@@ -29,6 +31,8 @@ def get_text_messages(message):
     elif MesText == "/reply" and MesFrUsr in [662653372, 544333900]:
         SendMes(MesFrUsr, "Напишите ID для ответа")
         RNSH(message, get_reply_query_id)
+    elif MesText == "/quit":
+        T.stop_bot()
     # В любых других случаях
     else:
         KeyboardInline = types.InlineKeyboardMarkup()
@@ -61,14 +65,13 @@ def get_query(message):
     K.add(key_reply_sender)
     SendMes(MesFrUsr, "Ваша заявка отправлена!")
     SendMes(662653372, f"Пользователь '{FrstScndNmNPst}' с ID {MesFrUsr} написал: {MesText}", reply_markup=K)
-    # SendMes(544333900, f"Пользователь '{FrstScndNmNPst}' с ID {MesFrUsr} написал: {MesText}", reply_markup=K)
 
 
 # Функции для ответа на заявку
 # Ввод ID
 def get_reply_query_id(message):
     global IDP
-    IDP = message.text
+    IDP = int(message.text)
     SendMes(MesFrUsr, "Напишите ваше имя, фамилию")
     RNSH(message, get_reply_query_FnLnP)
 
@@ -84,8 +87,10 @@ def get_reply_query_FnLnP(message):
 # Ввод ответа и отчет
 def get_reply_query(message):
     global MesText
+    global IDP
     MesText = message.text
     SendMes(MesFrUsr, "Ответ доставлен")
+    get_reply_query_id
     SendMes(IDP, f"Пользователь '{ITFrstScndNmNPst}' из отдела IT написал: {MesText}")
     IDP = 0
 
@@ -100,6 +105,7 @@ def callback_worker(call: types.CallbackQuery):
     elif call.data == "/reply":
         SendMes(CllFrmUsrId, "Напишите ID для ответа")
         RNSH(call.message, get_reply_query_id)
+
 
 
 T.polling(none_stop=True, interval=0.5)
