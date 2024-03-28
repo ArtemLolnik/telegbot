@@ -12,14 +12,12 @@ try:
     ) as connection:
         print(connection)
     CToEoRQ = """
-    CREATE TABLE table_on_execution_of_requests(
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        id_user INT PRIMARY KEY,
-        id_query INT PRIMARY KEY,
-        A_staff_member_on_a_quest VARCHAR(1000) Null,
-        Readiness BOOL
-    )
-    CREATE TABLE table_IT_users
+    CREATE TABLE table_staff(
+            id INT NOT NULL AUTO_INCREMENT,
+            id_staff INT NOT NULL,
+            familiya_staff VARCHAR(150),
+            imya_staff VARCHAR(150),
+            PRIMARY KEY (id)
     """
     with connection.cursor() as cursor:
         connection.reconnect()
