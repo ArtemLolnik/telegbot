@@ -1,7 +1,6 @@
 import telebot
 import tfb
 from telebot import types
-import sys
 
 
 T = telebot.TeleBot(tfb.token)
