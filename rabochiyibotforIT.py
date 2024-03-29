@@ -30,7 +30,7 @@ def get_text_messages(message):
     elif MesText == "/reply" and MesFrUsr in [662653372, 544333900]:
         SendMes(MesFrUsr, "Напишите ID для ответа")
         RNSH(message, get_reply_query_id)
-    elif MesText == "/quit":
+    elif MesText == "/quit" and MesFrUsr == 662653372:
         T.stop_bot()
     # В любых других случаях
     else:
@@ -41,7 +41,8 @@ def get_text_messages(message):
         if MesFrUsr in [662653372, 544333900]:
             KeyboardInline.add(key_reply)
         if MesFrUsr in [662653372, 544333900]:
-            SendMes(MesFrUsr, "/query - отправить заявку в отдел IT\n/reply - ответить на заявку", reply_markup=KeyboardInline)
+            SendMes(MesFrUsr, "/query - отправить заявку в отдел IT\n/reply - ответить на заявку",
+                     reply_markup=KeyboardInline)
         else:
             SendMes(MesFrUsr, "/query - отправить заявку в отдел IT", reply_markup=KeyboardInline)
 
