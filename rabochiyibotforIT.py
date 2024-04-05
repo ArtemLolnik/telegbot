@@ -24,7 +24,7 @@ def get_text_messages(message):
     # Условия для выполнения разных команд
     # Заявка
     if MesText == "/query":
-        SendMes(MesFrUsr, "Напишите ваше имя, фамилию, должность")
+        SendMes(MesFrUsr, "Напишите ваше имя, фамилию, должность\nНапример: Артём Чиженко Специалист технической поддержки")
         RNSH(message, get_name_surname)
     # Команда, которая отвечает на заявку
     elif MesText == "/reply" and MesFrUsr in [662653372, 544333900]:
