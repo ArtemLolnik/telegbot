@@ -1,13 +1,10 @@
 import pyodbc
 from datetime import datetime
 
-try:
-    class Sql:
-        def __init__(self, database="tg_bot_db", server="NecronTemleCO"):
-            self.cnxn = pyodbc.connect("Driver={SQL Server Native Client 11.0};"
-                                       "Server="+server+";"
-                                       "Database="+database+";"
-                                       "Trusted_Connection=yes;")
-            self.query = "-- {}\n\n-- Made in Python".format(datetime.now().strftime("%d/%m/%Y"))
-except Exception as ex:
-    print(ex)
+SERVER = 'NecronTempleCO'
+DATABASE = 'tg_bot_db'
+USERNAME = 'BOT_TG'
+PASSWORD = 'Flvby'
+
+connectionString = f'DRIVER={{ODBC Driver 18 for SQL Server}};SERVER={SERVER};DATABASE={DATABASE};UID={USERNAME};PWD={PASSWORD}'
+conn = pyodbc.connect(connectionString)
