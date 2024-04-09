@@ -1,0 +1,242 @@
+USE [master]
+GO
+/****** Object:  Database [tg_bot_db]    Script Date: 08.04.2024 0:05:56 ******/
+CREATE DATABASE [tg_bot_db]
+ CONTAINMENT = NONE
+ ON  PRIMARY 
+( NAME = N'tg_bot_db', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\DATA\tg_bot_db.mdf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
+ LOG ON 
+( NAME = N'tg_bot_db_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL16.MSSQLSERVER\MSSQL\DATA\tg_bot_db_log.ldf' , SIZE = 8192KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
+ WITH CATALOG_COLLATION = DATABASE_DEFAULT, LEDGER = OFF
+GO
+ALTER DATABASE [tg_bot_db] SET COMPATIBILITY_LEVEL = 160
+GO
+IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
+begin
+EXEC [tg_bot_db].[dbo].[sp_fulltext_database] @action = 'enable'
+end
+GO
+ALTER DATABASE [tg_bot_db] SET ANSI_NULL_DEFAULT OFF 
+GO
+ALTER DATABASE [tg_bot_db] SET ANSI_NULLS OFF 
+GO
+ALTER DATABASE [tg_bot_db] SET ANSI_PADDING OFF 
+GO
+ALTER DATABASE [tg_bot_db] SET ANSI_WARNINGS OFF 
+GO
+ALTER DATABASE [tg_bot_db] SET ARITHABORT OFF 
+GO
+ALTER DATABASE [tg_bot_db] SET AUTO_CLOSE OFF 
+GO
+ALTER DATABASE [tg_bot_db] SET AUTO_SHRINK OFF 
+GO
+ALTER DATABASE [tg_bot_db] SET AUTO_UPDATE_STATISTICS ON 
+GO
+ALTER DATABASE [tg_bot_db] SET CURSOR_CLOSE_ON_COMMIT OFF 
+GO
+ALTER DATABASE [tg_bot_db] SET CURSOR_DEFAULT  GLOBAL 
+GO
+ALTER DATABASE [tg_bot_db] SET CONCAT_NULL_YIELDS_NULL OFF 
+GO
+ALTER DATABASE [tg_bot_db] SET NUMERIC_ROUNDABORT OFF 
+GO
+ALTER DATABASE [tg_bot_db] SET QUOTED_IDENTIFIER OFF 
+GO
+ALTER DATABASE [tg_bot_db] SET RECURSIVE_TRIGGERS OFF 
+GO
+ALTER DATABASE [tg_bot_db] SET  DISABLE_BROKER 
+GO
+ALTER DATABASE [tg_bot_db] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
+GO
+ALTER DATABASE [tg_bot_db] SET DATE_CORRELATION_OPTIMIZATION OFF 
+GO
+ALTER DATABASE [tg_bot_db] SET TRUSTWORTHY OFF 
+GO
+ALTER DATABASE [tg_bot_db] SET ALLOW_SNAPSHOT_ISOLATION OFF 
+GO
+ALTER DATABASE [tg_bot_db] SET PARAMETERIZATION SIMPLE 
+GO
+ALTER DATABASE [tg_bot_db] SET READ_COMMITTED_SNAPSHOT OFF 
+GO
+ALTER DATABASE [tg_bot_db] SET HONOR_BROKER_PRIORITY OFF 
+GO
+ALTER DATABASE [tg_bot_db] SET RECOVERY FULL 
+GO
+ALTER DATABASE [tg_bot_db] SET  MULTI_USER 
+GO
+ALTER DATABASE [tg_bot_db] SET PAGE_VERIFY CHECKSUM  
+GO
+ALTER DATABASE [tg_bot_db] SET DB_CHAINING OFF 
+GO
+ALTER DATABASE [tg_bot_db] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF ) 
+GO
+ALTER DATABASE [tg_bot_db] SET TARGET_RECOVERY_TIME = 60 SECONDS 
+GO
+ALTER DATABASE [tg_bot_db] SET DELAYED_DURABILITY = DISABLED 
+GO
+ALTER DATABASE [tg_bot_db] SET ACCELERATED_DATABASE_RECOVERY = OFF  
+GO
+EXEC sys.sp_db_vardecimal_storage_format N'tg_bot_db', N'ON'
+GO
+ALTER DATABASE [tg_bot_db] SET QUERY_STORE = ON
+GO
+ALTER DATABASE [tg_bot_db] SET QUERY_STORE (OPERATION_MODE = READ_WRITE, CLEANUP_POLICY = (STALE_QUERY_THRESHOLD_DAYS = 30), DATA_FLUSH_INTERVAL_SECONDS = 900, INTERVAL_LENGTH_MINUTES = 60, MAX_STORAGE_SIZE_MB = 1000, QUERY_CAPTURE_MODE = AUTO, SIZE_BASED_CLEANUP_MODE = AUTO, MAX_PLANS_PER_QUERY = 200, WAIT_STATS_CAPTURE_MODE = ON)
+GO
+USE [tg_bot_db]
+GO
+/****** Object:  Table [dbo].[applicant_table]    Script Date: 08.04.2024 0:05:56 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[applicant_table](
+	[id] [int] NOT NULL,
+	[id_tg_applicant] [int] NOT NULL,
+	[familiya_applicant] [int] NOT NULL,
+	[imya_applicant] [int] NOT NULL,
+	[id_unit] [int] NOT NULL,
+	[id_post] [int] NOT NULL,
+ CONSTRAINT [PK_applicant_table] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[display_data]    Script Date: 08.04.2024 0:05:56 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[display_data](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[id_staff] [int] NOT NULL,
+	[id_order] [int] NOT NULL,
+	[id_status] [int] NOT NULL,
+	[id_applicant] [int] NOT NULL,
+ CONSTRAINT [PK_display_data] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[order_table]    Script Date: 08.04.2024 0:05:56 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[order_table](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[order_name] [nvarchar](max) NOT NULL,
+	[start_time] [datetime] NOT NULL,
+	[response_time] [datetime] NOT NULL,
+	[complite_time] [datetime] NOT NULL,
+ CONSTRAINT [PK_order_table] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[post_table]    Script Date: 08.04.2024 0:05:56 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[post_table](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[name_post] [nvarchar](max) NOT NULL,
+ CONSTRAINT [PK_post_table] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[table_staff]    Script Date: 08.04.2024 0:05:56 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[table_staff](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[id_tg_staff] [int] NOT NULL,
+	[familiya_staff] [nvarchar](max) NOT NULL,
+	[imya_staff] [nvarchar](max) NOT NULL,
+	[id_unit] [int] NOT NULL,
+	[id_post] [int] NOT NULL,
+ CONSTRAINT [PK_table_staff] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[table_status]    Script Date: 08.04.2024 0:05:56 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[table_status](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[name_status] [nvarchar](max) NOT NULL,
+ CONSTRAINT [PK_table_status] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[unit_table]    Script Date: 08.04.2024 0:05:56 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[unit_table](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[name_unit] [nvarchar](max) NOT NULL,
+ CONSTRAINT [PK_unit_table] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[applicant_table]  WITH CHECK ADD  CONSTRAINT [FK_applicant_table_post_table] FOREIGN KEY([id_post])
+REFERENCES [dbo].[post_table] ([id])
+GO
+ALTER TABLE [dbo].[applicant_table] CHECK CONSTRAINT [FK_applicant_table_post_table]
+GO
+ALTER TABLE [dbo].[applicant_table]  WITH CHECK ADD  CONSTRAINT [FK_applicant_table_unit_table] FOREIGN KEY([id_unit])
+REFERENCES [dbo].[unit_table] ([id])
+GO
+ALTER TABLE [dbo].[applicant_table] CHECK CONSTRAINT [FK_applicant_table_unit_table]
+GO
+ALTER TABLE [dbo].[display_data]  WITH CHECK ADD  CONSTRAINT [FK_display_data_applicant_table] FOREIGN KEY([id_applicant])
+REFERENCES [dbo].[applicant_table] ([id])
+GO
+ALTER TABLE [dbo].[display_data] CHECK CONSTRAINT [FK_display_data_applicant_table]
+GO
+ALTER TABLE [dbo].[display_data]  WITH CHECK ADD  CONSTRAINT [FK_display_data_order_table] FOREIGN KEY([id_order])
+REFERENCES [dbo].[order_table] ([id])
+GO
+ALTER TABLE [dbo].[display_data] CHECK CONSTRAINT [FK_display_data_order_table]
+GO
+ALTER TABLE [dbo].[display_data]  WITH CHECK ADD  CONSTRAINT [FK_display_data_table_staff] FOREIGN KEY([id_staff])
+REFERENCES [dbo].[table_staff] ([id])
+GO
+ALTER TABLE [dbo].[display_data] CHECK CONSTRAINT [FK_display_data_table_staff]
+GO
+ALTER TABLE [dbo].[display_data]  WITH CHECK ADD  CONSTRAINT [FK_display_data_table_status] FOREIGN KEY([id_status])
+REFERENCES [dbo].[table_status] ([id])
+GO
+ALTER TABLE [dbo].[display_data] CHECK CONSTRAINT [FK_display_data_table_status]
+GO
+ALTER TABLE [dbo].[table_staff]  WITH CHECK ADD  CONSTRAINT [FK_table_staff_post_table] FOREIGN KEY([id_post])
+REFERENCES [dbo].[post_table] ([id])
+GO
+ALTER TABLE [dbo].[table_staff] CHECK CONSTRAINT [FK_table_staff_post_table]
+GO
+ALTER TABLE [dbo].[table_staff]  WITH CHECK ADD  CONSTRAINT [FK_table_staff_unit_table] FOREIGN KEY([id_unit])
+REFERENCES [dbo].[unit_table] ([id])
+GO
+ALTER TABLE [dbo].[table_staff] CHECK CONSTRAINT [FK_table_staff_unit_table]
+GO
+USE [master]
+GO
+ALTER DATABASE [tg_bot_db] SET  READ_WRITE 
+GO
