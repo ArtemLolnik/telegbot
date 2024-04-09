@@ -14,6 +14,8 @@ SendMes = T.send_message
 RNSH = T.register_next_step_handler
 IDP = 0
 
+# Функции для заявки
+# Ввод имени, фамилии, должности
 def get_name_surname(message):
     global FrstScndNmNPst
     FrstScndNmNPst = message.text
@@ -22,9 +24,10 @@ def get_name_surname(message):
     Post = ""
     for i in FrstScndNmNPst.split(" ")[2:]:
         Post += i + " "
-    print(Imya)
-    print(Familiya)
-    print(Post)
+    print(f"TGID: {MesFrUsr}")
+    print(f"Имя: {Imya}")
+    print(f"Фамилия: {Familiya}")
+    print(f"Должность: {Post}")
     SendMes(MesFrUsr, "Напишите вашу заявку")
     RNSH(message, get_query)
 
@@ -45,7 +48,7 @@ def get_text_messages(message):
     elif MesText == "/reply" and MesFrUsr in [662653372, 544333900]:
         SendMes(MesFrUsr, "Напишите ID для ответа")
         RNSH(message, get_reply_query_id)
-    elif MesText == "/quit" and MesFrUsr == 662653372:
+    elif MesText == "/quit" and MesFrUsr == 1:
         T.stop_bot()
     # В любых других случаях
     else:
@@ -62,8 +65,7 @@ def get_text_messages(message):
             SendMes(MesFrUsr, "/query - отправить заявку в отдел IT", reply_markup=KeyboardInline)
 
 
-# Функции для заявки
-# Ввод имени, фамилии, должности
+
 
 
 
@@ -71,6 +73,7 @@ def get_text_messages(message):
 def get_query(message):
     global MesText
     MesText = message.text
+    print(f"Заявка: {MesText}")
     K = types.InlineKeyboardMarkup()
     key_reply_sender = types.InlineKeyboardButton(text='Ответить', callback_data='/reply')
     K.add(key_reply_sender)

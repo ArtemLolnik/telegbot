@@ -10,3 +10,9 @@ try:
     
 except Exception as ex:
     print(ex)
+
+def save_applicant(id_tg,imya,familiya):
+    cursor = conn.cursor()
+    query = (f"INSERT INTO applicant_table (id_tg_applicant,imya_applicant,familiya_applicant) VALUES (?,?,?)', ('{id_tg}','{imya}','{familiya}')")
+    cursor.execute(query)
+    conn.commit()
