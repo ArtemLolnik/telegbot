@@ -13,6 +13,7 @@ except Exception as ex:
 
 def save_applicant(id_tg,imya,familiya):
     cursor = conn.cursor()
-    query = (f"INSERT INTO applicant_table (id_tg_applicant,imya_applicant,familiya_applicant) VALUES (?,?,?)", (str(id_tg),imya,familiya))
-    cursor.execute(query)
+    query = "INSERT INTO applicant_table (id_tg_applicant, imya_applicant, familiya_applicant, id_unit, id_post) VALUES (?, ?, ?, ?, ?)"
+    params = (id_tg, imya, familiya, 1, 1)
+    cursor.execute(query, params)
     conn.commit()
