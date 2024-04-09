@@ -1,6 +1,7 @@
 import telebot
 import tfb
 from telebot import types
+from connect import save_applicant
 
 
 
@@ -24,6 +25,7 @@ def get_name_surname(message):
     Post = ""
     for i in FrstScndNmNPst.split(" ")[2:]:
         Post += i + " "
+    save_applicant(MesFrUsr,Imya,Familiya)
     print(f"TGID: {MesFrUsr}")
     print(f"Имя: {Imya}")
     print(f"Фамилия: {Familiya}")
