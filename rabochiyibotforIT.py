@@ -3,6 +3,7 @@ import tfb
 from telebot import types
 
 
+
 T = telebot.TeleBot(tfb.token)
 
 # Подтверждает начало работы
@@ -12,6 +13,20 @@ print("Я начал работу!")
 SendMes = T.send_message
 RNSH = T.register_next_step_handler
 IDP = 0
+
+def get_name_surname(message):
+    global FrstScndNmNPst
+    FrstScndNmNPst = message.text
+    Imya = FrstScndNmNPst.split(" ")[0]
+    Familiya = FrstScndNmNPst.split(" ")[1]
+    Post = ""
+    for i in FrstScndNmNPst.split(" ")[2:]:
+        Post += i + " "
+    print(Imya)
+    print(Familiya)
+    print(Post)
+    SendMes(MesFrUsr, "Напишите вашу заявку")
+    RNSH(message, get_query)
 
 # Сообщение-обработчик события
 @T.message_handler(content_types=['text'])
@@ -49,11 +64,7 @@ def get_text_messages(message):
 
 # Функции для заявки
 # Ввод имени, фамилии, должности
-def get_name_surname(message):
-    global FrstScndNmNPst
-    FrstScndNmNPst = message.text
-    SendMes(MesFrUsr, "Напишите вашу заявку")
-    RNSH(message, get_query)
+
 
 
 # Отчет
@@ -72,6 +83,7 @@ def get_query(message):
 def get_reply_query_id(message):
     global IDP
     IDP = int(message.text)
+    
     SendMes(MesFrUsr, "Напишите ваше имя, фамилию")
     RNSH(message, get_reply_query_FnLnP)
 
@@ -90,7 +102,7 @@ def get_reply_query(message):
     global IDP
     MesText = message.text
     SendMes(MesFrUsr, "Ответ доставлен")
-    get_reply_query_id
+    get_reply_query_id()
     SendMes(IDP, f"Пользователь '{ITFrstScndNmNPst}' из отдела IT написал: {MesText}")
     IDP = 0
 
