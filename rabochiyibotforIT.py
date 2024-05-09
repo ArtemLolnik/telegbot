@@ -36,18 +36,22 @@ def get_name_surname(message):
 # Сообщение-обработчик события
 @T.message_handler(content_types=['text'])
 def get_text_messages(message):
+    global user
+    user = ""
 
     # Условия для выполнения разных команд
     # Заявка
     if message.text == "/query":
         if search_user_tg(message.from_user.id) == None:
+            SendMes(message.from_user.id, "1")
             SendMes(message.from_user.id, "Напишите ваше имя, фамилию, должность.\nНапример: Артём Чиженко Специалист технической поддержки.")
             RNSH(message, get_name_surname)
         else:
-            user = ""
-            for i in search_user_tg(message.from_user.id):
+            for i in search_user_tg(message.from_user.id)[2:-2]:
                 user += f"{i} "
-            SendMes(message.from_user.id, user)
+            SendMes(message.from_user.id, "2")
+            SendMes(message.from_user.id, "Напишите вашу заявку")
+            RNSH(message, get_query)
     # Команда, которая отвечает на заявку
     elif message.text == "/reply" and message.from_user.id in [662653372, 544333900]:
         SendMes(message.from_user.id, "Напишите ID для ответа.")
@@ -78,8 +82,10 @@ def get_query(message):
     key_reply_sender = types.InlineKeyboardButton(text='Ответить', callback_data='/reply')
     K.add(key_reply_sender)
     SendMes(message.from_user.id, "Ваша заявка отправлена.\nОжидайте ответа.")
-    SendMes(662653372, f"Пользователь '{FrstScndNmNPst}' с ID {message.from_user.id} написал: {message.text}", reply_markup=K)
-
+    if user != "":
+        SendMes(662653372, f"Пользователь '{user}' с ID {message.from_user.id} написал: {message.text}")        
+    else:
+        SendMes(662653372, f"Пользователь '{FrstScndNmNPst}' с ID {message.from_user.id} написал: {message.text}", reply_markup=K)
 
 # Функции для ответа на заявку
 # Ввод ID
