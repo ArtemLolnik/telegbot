@@ -13,7 +13,7 @@ print("Я начал работу!")
 # Условные переменные
 SendMes = T.send_message
 RNSH = T.register_next_step_handler
-IDP = 0
+USER_ID = 0
 
 # Функции для заявки
 # Ввод имени, фамилии, должности
@@ -78,8 +78,8 @@ def get_query(message):
 # Функции для ответа на заявку
 # Ввод ID
 def get_reply_query_id(message):
-    global IDP
-    IDP = int(message.text)
+    global USER_ID
+    USER_ID = int(message.text)
     SendMes(message.from_user.id, "Напишите ваше имя, фамилию")
     RNSH(message, get_reply_query_FnLnP)
 
@@ -94,9 +94,10 @@ def get_reply_query_FnLnP(message):
 
 # Ввод ответа и отчет
 def get_reply_query(message):
+    global USER_ID
+    SendMes(USER_ID, f"Пользователь '{ITFrstScndNmNPst}' из отдела IT написал: {message.text}")
     SendMes(message.from_user.id, "Ответ доставлен")
-    SendMes(IDP, f"Пользователь '{ITFrstScndNmNPst}' из отдела IT написал: {message.text}")
-    IDP = 0
+    USER_ID = 0
 
 
 
