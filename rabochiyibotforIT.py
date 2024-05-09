@@ -1,7 +1,7 @@
 import telebot
 import tfb
 from telebot import types
-from connect import save_applicant
+from connect import save_applicant, search_user_tg
 
 
 
@@ -40,11 +40,17 @@ def get_text_messages(message):
     # Условия для выполнения разных команд
     # Заявка
     if message.text == "/query":
-        SendMes(message.from_user.id, "Напишите ваше имя, фамилию, должность\nНапример: Артём Чиженко Специалист технической поддержки")
-        RNSH(message, get_name_surname)
+        if search_user_tg(message.from_user.id) == None:
+            SendMes(message.from_user.id, "Напишите ваше имя, фамилию, должность.\nНапример: Артём Чиженко Специалист технической поддержки.")
+            RNSH(message, get_name_surname)
+        else:
+            user = ""
+            for i in search_user_tg(message.from_user.id):
+                user += f"{i} "
+            SendMes(message.from_user.id, user)
     # Команда, которая отвечает на заявку
     elif message.text == "/reply" and message.from_user.id in [662653372, 544333900]:
-        SendMes(message.from_user.id, "Напишите ID для ответа")
+        SendMes(message.from_user.id, "Напишите ID для ответа.")
         RNSH(message, get_reply_query_id)
     # В любых других случаях
     else:
@@ -55,10 +61,10 @@ def get_text_messages(message):
         if message.from_user.id in [662653372, 544333900]:
             KeyboardInline.add(key_reply)
         if message.from_user.id in [662653372, 544333900]:
-            SendMes(message.from_user.id, "/query - отправить заявку в отдел IT\n/reply - ответить на заявку",
+            SendMes(message.from_user.id, "/query - отправить заявку в отдел IT.\n/reply - ответить на заявку.",
                      reply_markup=KeyboardInline)
         else:
-            SendMes(message.from_user.id, "/query - отправить заявку в отдел IT", reply_markup=KeyboardInline)
+            SendMes(message.from_user.id, "/query - отправить заявку в отдел IT.", reply_markup=KeyboardInline)
 
 
 
@@ -71,7 +77,7 @@ def get_query(message):
     K = types.InlineKeyboardMarkup()
     key_reply_sender = types.InlineKeyboardButton(text='Ответить', callback_data='/reply')
     K.add(key_reply_sender)
-    SendMes(message.from_user.id, "Ваша заявка отправлена!")
+    SendMes(message.from_user.id, "Ваша заявка отправлена.\nОжидайте ответа.")
     SendMes(662653372, f"Пользователь '{FrstScndNmNPst}' с ID {message.from_user.id} написал: {message.text}", reply_markup=K)
 
 
@@ -80,7 +86,7 @@ def get_query(message):
 def get_reply_query_id(message):
     global USER_ID
     USER_ID = int(message.text)
-    SendMes(message.from_user.id, "Напишите ваше имя, фамилию")
+    SendMes(message.from_user.id, "Напишите ваше имя, фамилию.")
     RNSH(message, get_reply_query_FnLnP)
 
 
@@ -88,15 +94,16 @@ def get_reply_query_id(message):
 def get_reply_query_FnLnP(message):
     global ITFrstScndNmNPst
     ITFrstScndNmNPst = message.text
-    SendMes(message.from_user.id, "Напишите ответ")
+    SendMes(message.from_user.id, "Напишите ответ.")
     RNSH(message, get_reply_query)
 
 
 # Ввод ответа и отчет
 def get_reply_query(message):
     global USER_ID
-    SendMes(USER_ID, f"Пользователь '{ITFrstScndNmNPst}' из отдела IT написал: {message.text}")
-    SendMes(message.from_user.id, "Ответ доставлен")
+    SendMes(USER_ID, f"Пользователь '{ITFrstScndNmNPst}' из отдела IT написал: {message.text}.")
+    print(f"Пользователь '{ITFrstScndNmNPst}' из отдела IT написал: {message.text}.")
+    SendMes(message.from_user.id, "Ответ доставлен.")
     USER_ID = 0
 
 

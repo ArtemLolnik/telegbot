@@ -27,13 +27,12 @@ def save_applicant(id_tg, imya, familiya):
         conn.commit()
         print("Пользователь успешно добавлен")
 
-#def save_applicant(id_tg,imya,familiya):
-#    cursor = conn.cursor()
-#    query = f"SELECT * FROM applicant_table WHERE id_tg_applicant = {id_tg}"
-#    cursor.execute(query)
-#    data = conn.commit()
-#    print(data)
-#    query = "INSERT INTO applicant_table (id_tg_applicant, imya_applicant, familiya_applicant, id_unit, id_post) VALUES (?, ?, ?, ?, ?)"
-#    params = (id_tg, imya, familiya, 1, 1)
-#    cursor.execute(query, params)
-#    conn.commit()
+def search_user_tg(id_tg):
+    cursor = conn.cursor()
+    query = f"SELECT * FROM applicant_table WHERE id_tg_applicant = {id_tg}"
+    cursor.execute(query)
+    existing_user = cursor.fetchone()
+    if existing_user:
+        return existing_user
+    else:
+        return None
