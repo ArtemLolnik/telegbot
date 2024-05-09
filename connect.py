@@ -11,9 +11,29 @@ try:
 except Exception as ex:
     print(ex)
 
-def save_applicant(id_tg,imya,familiya):
+def save_applicant(id_tg, imya, familiya):
     cursor = conn.cursor()
-    query = "INSERT INTO applicant_table (id_tg_applicant, imya_applicant, familiya_applicant, id_unit, id_post) VALUES (?, ?, ?, ?, ?)"
-    params = (id_tg, imya, familiya, 1, 1)
-    cursor.execute(query, params)
-    conn.commit()
+
+    query = f"SELECT * FROM applicant_table WHERE id_tg_applicant = {id_tg}"
+    cursor.execute(query)
+    existing_user = cursor.fetchone()
+
+    if existing_user:
+        print("Пользователь уже существует")
+    else:
+        query = "INSERT INTO applicant_table (id_tg_applicant, imya_applicant, familiya_applicant, id_unit, id_post) VALUES (?, ?, ?, ?, ?)"
+        params = (id_tg, imya, familiya, 1, 1)
+        cursor.execute(query, params)
+        conn.commit()
+        print("Пользователь успешно добавлен")
+
+#def save_applicant(id_tg,imya,familiya):
+#    cursor = conn.cursor()
+#    query = f"SELECT * FROM applicant_table WHERE id_tg_applicant = {id_tg}"
+#    cursor.execute(query)
+#    data = conn.commit()
+#    print(data)
+#    query = "INSERT INTO applicant_table (id_tg_applicant, imya_applicant, familiya_applicant, id_unit, id_post) VALUES (?, ?, ?, ?, ?)"
+#    params = (id_tg, imya, familiya, 1, 1)
+#    cursor.execute(query, params)
+#    conn.commit()
