@@ -43,13 +43,11 @@ def get_text_messages(message):
     # Заявка
     if message.text == "/query":
         if search_user_tg(message.from_user.id) == None:
-            SendMes(message.from_user.id, "1")
             SendMes(message.from_user.id, "Напишите ваше имя, фамилию, должность.\nНапример: Артём Чиженко Специалист технической поддержки.")
             RNSH(message, get_name_surname)
         else:
             for i in search_user_tg(message.from_user.id)[2:-2]:
                 user += f"{i} "
-            SendMes(message.from_user.id, "2")
             SendMes(message.from_user.id, "Напишите вашу заявку")
             RNSH(message, get_query)
     # Команда, которая отвечает на заявку
