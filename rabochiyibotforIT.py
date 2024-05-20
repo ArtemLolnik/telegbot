@@ -26,7 +26,7 @@ try:
         Post = ""
         for i in FrstScndNmNPst.split(" ")[2:]:
             Post += i + " "
-        save_applicant(str(message.from_user.id),str(Imya),str(Familiya))
+        save_applicant(message.from_user.id,str(Imya),str(Familiya))
         print(f"TGID: {message.from_user.id}")
         print(f"Имя: {Imya}")
         print(f"Фамилия: {Familiya}")
@@ -58,7 +58,7 @@ try:
         # В любых других случаях
         else:
             KeyboardInline = types.InlineKeyboardMarkup()
-            key_query = types.InlineKeyboardButton(text='Отправить заявку', callback_data='/query')
+            key_query = types.InlineKeyboardButton(text='/query', callback_data='/query')
             key_reply = types.InlineKeyboardButton(text='Ответить на заявку', callback_data='/reply')
             KeyboardInline.add(key_query)
             if message.from_user.id in [662653372, 544333900]:
@@ -85,6 +85,7 @@ try:
             SendMes(662653372, f"Пользователь '{user}' с ID {message.from_user.id} написал: {message.text}")     
         else:
             SendMes(662653372, f"Пользователь '{FrstScndNmNPst}' с ID {message.from_user.id} написал: {message.text}", reply_markup=K)
+
 
     # Функции для ответа на заявку
     # Ввод ID
@@ -128,5 +129,6 @@ try:
 
     T.polling(none_stop=True, interval=1)
 
-except:
+except Exception as ex:
+    print(ex)
     system('python rabochiyibotforIT.py')

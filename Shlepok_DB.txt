@@ -1,6 +1,6 @@
 USE [master]
 GO
-/****** Object:  Database [tg_bot_db]    Script Date: 08.04.2024 0:05:56 ******/
+/****** Object:  Database [tg_bot_db]    Script Date: 20.05.2024 21:20:14 ******/
 CREATE DATABASE [tg_bot_db]
  CONTAINMENT = NONE
  ON  PRIMARY 
@@ -84,32 +84,32 @@ ALTER DATABASE [tg_bot_db] SET QUERY_STORE (OPERATION_MODE = READ_WRITE, CLEANUP
 GO
 USE [tg_bot_db]
 GO
-/****** Object:  Table [dbo].[applicant_table]    Script Date: 08.04.2024 0:05:56 ******/
+/****** Object:  Table [dbo].[applicant_table]    Script Date: 20.05.2024 21:20:14 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[applicant_table](
-	[id] [int] NOT NULL,
+	[id] [int] IDENTITY(1,1) NOT NULL,
 	[id_tg_applicant] [int] NOT NULL,
-	[familiya_applicant] [int] NOT NULL,
-	[imya_applicant] [int] NOT NULL,
+	[familiya_applicant] [nvarchar](max) NOT NULL,
+	[imya_applicant] [nvarchar](max) NOT NULL,
 	[id_unit] [int] NOT NULL,
 	[id_post] [int] NOT NULL,
  CONSTRAINT [PK_applicant_table] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[display_data]    Script Date: 08.04.2024 0:05:56 ******/
+/****** Object:  Table [dbo].[display_data]    Script Date: 20.05.2024 21:20:14 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[display_data](
 	[id] [int] IDENTITY(1,1) NOT NULL,
-	[id_staff] [int] NOT NULL,
+	[id_staff] [int] NULL,
 	[id_order] [int] NOT NULL,
 	[id_status] [int] NOT NULL,
 	[id_applicant] [int] NOT NULL,
@@ -119,7 +119,7 @@ CREATE TABLE [dbo].[display_data](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[order_table]    Script Date: 08.04.2024 0:05:56 ******/
+/****** Object:  Table [dbo].[order_table]    Script Date: 20.05.2024 21:20:14 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -136,7 +136,7 @@ CREATE TABLE [dbo].[order_table](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[post_table]    Script Date: 08.04.2024 0:05:56 ******/
+/****** Object:  Table [dbo].[post_table]    Script Date: 20.05.2024 21:20:14 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -150,7 +150,7 @@ CREATE TABLE [dbo].[post_table](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[table_staff]    Script Date: 08.04.2024 0:05:56 ******/
+/****** Object:  Table [dbo].[table_staff]    Script Date: 20.05.2024 21:20:14 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -168,7 +168,7 @@ CREATE TABLE [dbo].[table_staff](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[table_status]    Script Date: 08.04.2024 0:05:56 ******/
+/****** Object:  Table [dbo].[table_status]    Script Date: 20.05.2024 21:20:14 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -182,7 +182,7 @@ CREATE TABLE [dbo].[table_status](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[unit_table]    Script Date: 08.04.2024 0:05:56 ******/
+/****** Object:  Table [dbo].[unit_table]    Script Date: 20.05.2024 21:20:14 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -195,6 +195,86 @@ CREATE TABLE [dbo].[unit_table](
 	[id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+SET IDENTITY_INSERT [dbo].[applicant_table] ON 
+GO
+INSERT [dbo].[applicant_table] ([id], [id_tg_applicant], [familiya_applicant], [imya_applicant], [id_unit], [id_post]) VALUES (1019, 662653372, N'Чиженко', N'Артём', 1, 1)
+GO
+INSERT [dbo].[applicant_table] ([id], [id_tg_applicant], [familiya_applicant], [imya_applicant], [id_unit], [id_post]) VALUES (1020, 915938977, N'Трунов', N'Кирилл', 1, 1)
+GO
+SET IDENTITY_INSERT [dbo].[applicant_table] OFF
+GO
+SET IDENTITY_INSERT [dbo].[post_table] ON 
+GO
+INSERT [dbo].[post_table] ([id], [name_post]) VALUES (1, N'Тест')
+GO
+INSERT [dbo].[post_table] ([id], [name_post]) VALUES (2, N'Ведущий специалист IT')
+GO
+INSERT [dbo].[post_table] ([id], [name_post]) VALUES (3, N'Специалист IT')
+GO
+INSERT [dbo].[post_table] ([id], [name_post]) VALUES (4, N'Специалист технической поддержки')
+GO
+INSERT [dbo].[post_table] ([id], [name_post]) VALUES (5, N'Менеджер отдела продаж')
+GO
+INSERT [dbo].[post_table] ([id], [name_post]) VALUES (6, N'Старший менеджер отдела продаж')
+GO
+SET IDENTITY_INSERT [dbo].[post_table] OFF
+GO
+SET IDENTITY_INSERT [dbo].[table_staff] ON 
+GO
+INSERT [dbo].[table_staff] ([id], [id_tg_staff], [familiya_staff], [imya_staff], [id_unit], [id_post]) VALUES (1, 662653372, N'Чиженко', N'Артём', 1, 3)
+GO
+SET IDENTITY_INSERT [dbo].[table_staff] OFF
+GO
+SET IDENTITY_INSERT [dbo].[table_status] ON 
+GO
+INSERT [dbo].[table_status] ([id], [name_status]) VALUES (1, N'Создано')
+GO
+INSERT [dbo].[table_status] ([id], [name_status]) VALUES (2, N'Принято')
+GO
+INSERT [dbo].[table_status] ([id], [name_status]) VALUES (3, N'Выполнено')
+GO
+SET IDENTITY_INSERT [dbo].[table_status] OFF
+GO
+SET IDENTITY_INSERT [dbo].[unit_table] ON 
+GO
+INSERT [dbo].[unit_table] ([id], [name_unit]) VALUES (1, N'Тест')
+GO
+INSERT [dbo].[unit_table] ([id], [name_unit]) VALUES (2, N'Служба Информационных Технологий')
+GO
+INSERT [dbo].[unit_table] ([id], [name_unit]) VALUES (3, N'Службаа Приёма и Размещения')
+GO
+INSERT [dbo].[unit_table] ([id], [name_unit]) VALUES (4, N'Служба гостиничного Хозяйства')
+GO
+INSERT [dbo].[unit_table] ([id], [name_unit]) VALUES (5, N'Отдел Маркетинга')
+GO
+INSERT [dbo].[unit_table] ([id], [name_unit]) VALUES (6, N'Отдел Продаж')
+GO
+INSERT [dbo].[unit_table] ([id], [name_unit]) VALUES (7, N'Финансовый Отдел')
+GO
+INSERT [dbo].[unit_table] ([id], [name_unit]) VALUES (8, N'Служба Безопасности')
+GO
+INSERT [dbo].[unit_table] ([id], [name_unit]) VALUES (9, N'Отдел Кадров')
+GO
+INSERT [dbo].[unit_table] ([id], [name_unit]) VALUES (10, N'Отдел Бронирования')
+GO
+INSERT [dbo].[unit_table] ([id], [name_unit]) VALUES (1002, N'Генеральный менеджер')
+GO
+INSERT [dbo].[unit_table] ([id], [name_unit]) VALUES (1003, N'Служба Эксплуатации')
+GO
+INSERT [dbo].[unit_table] ([id], [name_unit]) VALUES (1004, N'Бухгалтерия')
+GO
+INSERT [dbo].[unit_table] ([id], [name_unit]) VALUES (1005, N'Отдел Анимации')
+GO
+INSERT [dbo].[unit_table] ([id], [name_unit]) VALUES (1006, N'FnB')
+GO
+INSERT [dbo].[unit_table] ([id], [name_unit]) VALUES (1007, N'Отдел Сафари-парка')
+GO
+INSERT [dbo].[unit_table] ([id], [name_unit]) VALUES (1008, N'Отдел Физическо-Оздоровительного Комплекса')
+GO
+INSERT [dbo].[unit_table] ([id], [name_unit]) VALUES (1009, N'Отдел СПА')
+GO
+SET IDENTITY_INSERT [dbo].[unit_table] OFF
 GO
 ALTER TABLE [dbo].[applicant_table]  WITH CHECK ADD  CONSTRAINT [FK_applicant_table_post_table] FOREIGN KEY([id_post])
 REFERENCES [dbo].[post_table] ([id])
