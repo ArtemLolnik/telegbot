@@ -37,8 +37,10 @@ try:
     # Сообщение-обработчик события
     @T.message_handler(content_types=['text'])
     def get_text_messages(message):
+        global message_for
         global user
         user = ""
+        message_for = message
 
         # Условия для выполнения разных команд
         # Заявка
@@ -56,6 +58,8 @@ try:
             SendMes(message.from_user.id, "Напишите ID для ответа.")
             RNSH(message, get_reply_query_id)
         # В любых других случаях
+        elif message.text == "/info" and message.from_user.id in [662653372, 544333900]:
+            SendMes(message.from_user.id, f"{message}")
         else:
             KeyboardInline = types.InlineKeyboardMarkup()
             key_query = types.InlineKeyboardButton(text='/query', callback_data='/query')
@@ -71,6 +75,29 @@ try:
 
 
 
+
+    def get_text_messages_for_keyboard(message, tg_user):
+        global user
+
+        # Условия для выполнения разных команд
+        # Заявка
+        if message == "/query":
+            if search_user_tg(tg_user.id) == None:
+                print("1.1")
+                SendMes(tg_user.id, "Напишите ваше имя, фамилию, должность.\nНапример: Артём Чиженко Специалист технической поддержки.")
+                RNSH(tg_user, get_name_surname)
+            else:
+                print("1.2")
+                for i in search_user_tg(tg_user.id)[2:-2]:
+                    user += f"{i} "
+                SendMes(tg_user.id, "Напишите вашу заявку")
+                RNSH(tg_user, get_query)
+        # Команда, которая отвечает на заявку
+        elif message == "/reply" and tg_user in [662653372, 544333900]:
+            print("1.3")
+            SendMes(tg_user.id, "Напишите ID для ответа.")
+            RNSH(tg_user, get_reply_query_id)
+        
 
 
 
@@ -117,13 +144,15 @@ try:
     # Функция 
     @T.callback_query_handler(func=lambda call: call.data == '/query' or call.data == '/reply')
     def callback_worker(call: types.CallbackQuery):
-        CllFrmUsrId = call.from_user.id
+        global message_for
         if call.data == "/query":
-            SendMes(CllFrmUsrId, "Напишите ваше имя, фамилию, должность")
-            RNSH(call.message, get_name_surname)
+            #SendMes(CllFrmUsrId, "Напишите ваше имя, фамилию, должность")
+            print(message_for)
+            print(message_for.id)
+            get_text_messages_for_keyboard("/query", message_for)
         elif call.data == "/reply":
-            SendMes(CllFrmUsrId, "Напишите ID для ответа")
-            RNSH(call.message, get_reply_query_id)
+            #SendMes(CllFrmUsrId, "Напишите ID для ответа")
+            get_text_messages_for_keyboard("/reply", message_for)
 
 
 
