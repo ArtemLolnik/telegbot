@@ -26,6 +26,7 @@ try:
         Post = ""
         for i in FrstScndNmNPst.split(" ")[2:]:
             Post += i + " "
+        save_applicant(str(message.from_user.id),str(Imya),str(Familiya))
         print(f"TGID: {message.from_user.id}")
         print(f"Имя: {Imya}")
         print(f"Фамилия: {Familiya}")

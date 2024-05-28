@@ -3,7 +3,7 @@ from datetime import datetime
 
 
 try:
-    SERVER = 'KLIMENT-FIS\\SQLEXPRESS'
+    SERVER = 'NecronTempleCO'
     DATABASE = 'tg_bot_db'
 
     connectionString = f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={SERVER};DATABASE={DATABASE};TRUSTED_CONNECTION=yes'
@@ -15,11 +15,6 @@ except Exception as ex:
 
 
 def save_applicant(id_tg, imya, familiya):
-    # print("######################################")
-    # print(id_tg)
-    # print(imya)
-    # print(familiya)
-    # print("######################################")
     cursor = conn.cursor()
 
     query = f"SELECT * FROM applicant_table WHERE id_tg_applicant = {id_tg}"
