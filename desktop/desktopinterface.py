@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import Label, Button, Entry, Listbox, Text
 from tkinter import scrolledtext
+from connect import 
+
 
 # Создание главного окна
 root = tk.Tk()
