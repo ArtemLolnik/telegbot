@@ -36,9 +36,6 @@ entry_position = Entry(root)
 entry_position.place(x=587, y=280, width=120, height=25)
 
 listbox_department = Listbox(root, height=5)
-listbox_department.insert(1, "Отдел 1")
-listbox_department.insert(2, "Отдел 2")
-listbox_department.insert(3, "Отдел 3")
 listbox_department.place(x=587, y=235, width=125, height=25)
 
 button_add_user = Button(root, text="Добавить пользователя")

@@ -36,3 +36,5 @@ def search_user_tg(id_tg):
         return existing_user
     else:
         return None
+    
+
