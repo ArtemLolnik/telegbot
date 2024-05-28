@@ -26,12 +26,11 @@ try:
         Post = ""
         for i in FrstScndNmNPst.split(" ")[2:]:
             Post += i + " "
-        save_applicant(str(message.from_user.id),str(Imya),str(Familiya))
+        save_applicant(message.from_user.id,str(Imya),str(Familiya))
         print(f"TGID: {message.from_user.id}")
         print(f"Имя: {Imya}")
         print(f"Фамилия: {Familiya}")
         print(f"Должность: {Post}")
-        save_applicant(message.from_user.id, Imya, Familiya)
         SendMes(message.from_user.id, "Напишите вашу заявку")
         # RNSH(message, get_query)
         RNSH(message, choise_unit)
@@ -84,7 +83,7 @@ try:
     @T.callback_query_handler(func=lambda call: call.data.startswith('/unit_'))
     def callback_worker(call):
         selected_department = call.data.split('_')[1]
-        # SendMes(call.message.chat.id, f"Выбран отдел: {selected_department}")
+        SendMes(call.message.chat.id, f"Выбран отдел: {selected_department}")
         save_order(call.message, selected_department)
         RNSH(call.message, get_query)
 
@@ -138,9 +137,12 @@ try:
         elif call.data == "/reply":
             SendMes(CllFrmUsrId, "Напишите ID для ответа")
             RNSH(call.message, get_reply_query_id)
+        elif call.data.startswith("/unit"):
+            # SendMes(CllFrmUsrId, "Напишите ID для ответа")
+            RNSH(call.message, get_query)
 
     T.polling(none_stop=True, interval=1)
 
 except Exception as e:
     print(e)
-    system('python rabochiyibotforIT.py')
+    system('python main.py')

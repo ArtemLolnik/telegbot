@@ -2,14 +2,14 @@
 
 ## Установка и Запуск
 
-Клонирование
+Клонирование и переход в папку проекта
 ```
-git clone 
+git clone https://github.com/ArtemLolnik/telegbot && cd telegbot
 ```
 
 Активация виртуального окружения
 ```shell
-venv\Scripts\activate
+python -m venv venv && venv\Scripts\activate
 ```
 Установка необходимых библиотек
 ```
@@ -17,5 +17,5 @@ pip install -r req.txt
 ```
 Запуск проекта
 ```
-python rabochiyibotforIT.py
+python main.py
 ```
