@@ -45,6 +45,7 @@ def search_user_tg(id_tg):
         return existing_user
     else:
         return None
+<<<<<<< HEAD
 
 
 def save_order(message, unit_id):
@@ -108,3 +109,7 @@ def get_unit_id(name):
     conn.close()
 
     return result
+=======
+    
+
+>>>>>>> 0484568a1b318f80fbb37e0aabd9a3a3eac75aab

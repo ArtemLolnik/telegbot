@@ -26,6 +26,10 @@ try:
         Post = ""
         for i in FrstScndNmNPst.split(" ")[2:]:
             Post += i + " "
+<<<<<<< HEAD
+=======
+        save_applicant(message.from_user.id,str(Imya),str(Familiya))
+>>>>>>> 0484568a1b318f80fbb37e0aabd9a3a3eac75aab
         print(f"TGID: {message.from_user.id}")
         print(f"Имя: {Imya}")
         print(f"Фамилия: {Familiya}")
@@ -38,8 +42,10 @@ try:
     # Сообщение-обработчик события
     @T.message_handler(content_types=['text'])
     def get_text_messages(message):
+        global message_for
         global user
         user = ""
+        message_for = message
 
         # Условия для выполнения разных команд
         # Заявка
@@ -58,9 +64,11 @@ try:
             SendMes(message.from_user.id, "Напишите ID для ответа.")
             RNSH(message, get_reply_query_id)
         # В любых других случаях
+        elif message.text == "/info" and message.from_user.id in [662653372, 544333900]:
+            SendMes(message.from_user.id, f"{message}")
         else:
             KeyboardInline = types.InlineKeyboardMarkup()
-            key_query = types.InlineKeyboardButton(text='Отправить заявку', callback_data='/query')
+            key_query = types.InlineKeyboardButton(text='/query', callback_data='/query')
             key_reply = types.InlineKeyboardButton(text='Ответить на заявку', callback_data='/reply')
             KeyboardInline.add(key_query)
             if message.from_user.id in [662653372, 544333900]:
@@ -78,6 +86,29 @@ try:
             Units.add(types.InlineKeyboardButton(text=f'{i[1]}', callback_data=f'/unit_{i[0]}'))
 
         SendMes(message.from_user.id, "Выберите отдел", reply_markup=Units)
+
+    def get_text_messages_for_keyboard(message, tg_user):
+        global user
+
+        # Условия для выполнения разных команд
+        # Заявка
+        if message == "/query":
+            if search_user_tg(tg_user.id) == None:
+                print("1.1")
+                SendMes(tg_user.id, "Напишите ваше имя, фамилию, должность.\nНапример: Артём Чиженко Специалист технической поддержки.")
+                RNSH(tg_user, get_name_surname)
+            else:
+                print("1.2")
+                for i in search_user_tg(tg_user.id)[2:-2]:
+                    user += f"{i} "
+                SendMes(tg_user.id, "Напишите вашу заявку")
+                RNSH(tg_user, get_query)
+        # Команда, которая отвечает на заявку
+        elif message == "/reply" and tg_user in [662653372, 544333900]:
+            print("1.3")
+            SendMes(tg_user.id, "Напишите ID для ответа.")
+            RNSH(tg_user, get_reply_query_id)
+        
 
 
     @T.callback_query_handler(func=lambda call: call.data.startswith('/unit_'))
@@ -99,6 +130,7 @@ try:
             SendMes(662653372, f"Пользователь '{user}' с ID {message.from_user.id} написал: {message.text}")
         else:
             SendMes(662653372, f"Пользователь '{FrstScndNmNPst}' с ID {message.from_user.id} написал: {message.text}", reply_markup=K)
+
 
     # Функции для ответа на заявку
     # Ввод ID
@@ -130,16 +162,23 @@ try:
     # Функция
     @T.callback_query_handler(func=lambda call: call.data == '/query' or call.data == '/reply' or call.data.startswith('/unit'))
     def callback_worker(call: types.CallbackQuery):
-        CllFrmUsrId = call.from_user.id
+        global message_for
         if call.data == "/query":
-            SendMes(CllFrmUsrId, "Напишите ваше имя, фамилию, должность")
-            RNSH(call.message, get_name_surname)
+            #SendMes(CllFrmUsrId, "Напишите ваше имя, фамилию, должность")
+            print(message_for)
+            print(message_for.id)
+            get_text_messages_for_keyboard("/query", message_for)
         elif call.data == "/reply":
-            SendMes(CllFrmUsrId, "Напишите ID для ответа")
-            RNSH(call.message, get_reply_query_id)
+            #SendMes(CllFrmUsrId, "Напишите ID для ответа")
+            get_text_messages_for_keyboard("/reply", message_for)
 
     T.polling(none_stop=True, interval=1)
 
+<<<<<<< HEAD
 except Exception as e:
     print(e)
+=======
+except Exception as ex:
+    print(ex)
+>>>>>>> 0484568a1b318f80fbb37e0aabd9a3a3eac75aab
     system('python rabochiyibotforIT.py')
