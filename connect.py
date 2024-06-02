@@ -13,8 +13,11 @@ try:
 except Exception as ex:
     print(ex)
 
+def get_connection():
+    return pyodbc.connect(connectionString)
 
 def save_applicant(id_tg, imya, familiya):
+    conn = get_connection()
     cursor = conn.cursor()
 
     query = f"SELECT * FROM applicant_table WHERE id_tg_applicant = {id_tg}"
@@ -30,19 +33,28 @@ def save_applicant(id_tg, imya, familiya):
         conn.commit()
         print("Пользователь успешно добавлен")
 
+    cursor.close()
+    conn.close()
+
 
 def search_user_tg(id_tg):
+    conn = get_connection()
     cursor = conn.cursor()
+
     query = f"SELECT * FROM applicant_table WHERE id_tg_applicant = {id_tg}"
     cursor.execute(query)
     existing_user = cursor.fetchone()
+    cursor.close()
+    conn.close()
     if existing_user:
         return existing_user
     else:
         return None
 
 
+
 def save_order(message, unit_id):
+    conn = get_connection()
     cursor = conn.cursor()
 
     # Получаем applicant_id
@@ -72,13 +84,14 @@ def save_order(message, unit_id):
 
     cursor.execute(query, params)
     conn.commit()
-    print("Запись успешно добавлена")
-
     cursor.close()
     conn.close()
+    print("Запись успешно добавлена")
+
 
 
 def get_units():
+    conn = get_connection()
     cursor = conn.cursor()
 
     # Получаем applicant_id
@@ -92,6 +105,7 @@ def get_units():
     return result
 
 def get_unit_id(name):
+    conn = get_connection()
     cursor = conn.cursor()
 
     # Получаем applicant_id

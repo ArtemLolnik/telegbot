@@ -4,9 +4,8 @@ from telebot import types
 from connect import save_applicant, search_user_tg, save_order, get_units, get_unit_id
 from os import system
 
-
 T = telebot.TeleBot(tfb.token)
-
+my_message = None
 # Подтверждает начало работы
 print("Я начал работу!")
 
@@ -21,19 +20,20 @@ try:
     def get_name_surname(message):
         global FrstScndNmNPst
         FrstScndNmNPst = message.text
-        Imya = message.text.split(" ")[0]
-        Familiya = message.text.split(" ")[1]
-        Post = ""
-        for i in FrstScndNmNPst.split(" ")[2:]:
-            Post += i + " "
-        save_applicant(message.from_user.id,str(Imya),str(Familiya))
+        parts = message.text.split(" ")
+        if len(parts) < 2:
+            SendMes(message.from_user.id, "Пожалуйста, укажите ваше имя и фамилию.")
+            return RNSH(message, get_name_surname)
+        Imya = parts[0]
+        Familiya = parts[1]
+        Post = " ".join(parts[2:])
+        save_applicant(message.from_user.id, Imya, Familiya)
         print(f"TGID: {message.from_user.id}")
         print(f"Имя: {Imya}")
         print(f"Фамилия: {Familiya}")
         print(f"Должность: {Post}")
         SendMes(message.from_user.id, "Напишите вашу заявку")
-        # RNSH(message, get_query)
-        RNSH(message, choise_unit)
+        RNSH(message, choose_unit)
 
     # Сообщение-обработчик события
     @T.message_handler(content_types=['text'])
@@ -44,48 +44,41 @@ try:
         # Условия для выполнения разных команд
         # Заявка
         if message.text == "/query":
-            if search_user_tg(message.from_user.id) == None:
+            if search_user_tg(message.from_user.id) is None:
                 SendMes(message.from_user.id, "Напишите ваше имя, фамилию, должность.\nНапример: Артём Чиженко Специалист технической поддержки.")
                 RNSH(message, get_name_surname)
             else:
-                for i in search_user_tg(message.from_user.id)[2:-2]:
-                    user += f"{i} "
+                existing_user = search_user_tg(message.from_user.id)
+                user = f"{existing_user[1]} {existing_user[2]}"
                 SendMes(message.from_user.id, "Напишите вашу заявку")
-                # RNSH(message, get_query)
-                RNSH(message, choise_unit)
+                RNSH(message, choose_unit)
         # Команда, которая отвечает на заявку
         elif message.text == "/reply" and message.from_user.id in [662653372, 544333900]:
             SendMes(message.from_user.id, "Напишите ID для ответа.")
             RNSH(message, get_reply_query_id)
         # В любых других случаях
         else:
-            KeyboardInline = types.InlineKeyboardMarkup()
-            key_query = types.InlineKeyboardButton(text='Отправить заявку', callback_data='/query')
-            key_reply = types.InlineKeyboardButton(text='Ответить на заявку', callback_data='/reply')
-            KeyboardInline.add(key_query)
-            if message.from_user.id in [662653372, 544333900]:
-                KeyboardInline.add(key_reply)
-            if message.from_user.id in [662653372, 544333900]:
-                SendMes(message.from_user.id, "/query - отправить заявку в отдел IT.\n/reply - ответить на заявку.",
-                         reply_markup=KeyboardInline)
-            else:
-                SendMes(message.from_user.id, "/query - отправить заявку в отдел IT.", reply_markup=KeyboardInline)
+            send_help_message(message)
 
+    def send_help_message(message):
+        KeyboardInline = types.InlineKeyboardMarkup()
+        key_query = types.InlineKeyboardButton(text='Отправить заявку', callback_data='/query')
+        key_reply = types.InlineKeyboardButton(text='Ответить на заявку', callback_data='/reply')
+        KeyboardInline.add(key_query)
+        if message.from_user.id in [662653372, 544333900]:
+            KeyboardInline.add(key_reply)
+        if message.from_user.id in [662653372, 544333900]:
+            SendMes(message.from_user.id, "/query - отправить заявку в отдел IT.\n/reply - ответить на заявку.", reply_markup=KeyboardInline)
+        else:
+            SendMes(message.from_user.id, "/query - отправить заявку в отдел IT.", reply_markup=KeyboardInline)
 
-    def choise_unit(message):
+    def choose_unit(message):
+        global my_message
+        my_message = message
         Units = types.InlineKeyboardMarkup()
-        for i in get_units():
-            Units.add(types.InlineKeyboardButton(text=f'{i[1]}', callback_data=f'/unit_{i[0]}'))
-
+        for unit in get_units():
+            Units.add(types.InlineKeyboardButton(text=unit[1], callback_data=f'/unit_{unit[0]}'))
         SendMes(message.from_user.id, "Выберите отдел", reply_markup=Units)
-
-
-    @T.callback_query_handler(func=lambda call: call.data.startswith('/unit_'))
-    def callback_worker(call):
-        selected_department = call.data.split('_')[1]
-        SendMes(call.message.chat.id, f"Выбран отдел: {selected_department}")
-        save_order(call.message, selected_department)
-        RNSH(call.message, get_query)
 
     # Отчет
     def get_query(message):
@@ -104,10 +97,13 @@ try:
     # Ввод ID
     def get_reply_query_id(message):
         global USER_ID
-        USER_ID = int(message.text)
-        SendMes(message.from_user.id, "Напишите ваше имя, фамилию.")
-        RNSH(message, get_reply_query_FnLnP)
-
+        try:
+            USER_ID = int(message.text)
+            SendMes(message.from_user.id, "Напишите ваше имя, фамилию.")
+            RNSH(message, get_reply_query_FnLnP)
+        except ValueError:
+            SendMes(message.from_user.id, "Пожалуйста, введите корректный ID.")
+            RNSH(message, get_reply_query_id)
 
     # Ввод имени, фамилии, должности
     def get_reply_query_FnLnP(message):
@@ -115,7 +111,6 @@ try:
         ITFrstScndNmNPst = message.text
         SendMes(message.from_user.id, "Напишите ответ.")
         RNSH(message, get_reply_query)
-
 
     # Ввод ответа и отчет
     def get_reply_query(message):
@@ -125,20 +120,20 @@ try:
         SendMes(message.from_user.id, "Ответ доставлен.")
         USER_ID = 0
 
-
-
-    # Функция
+    #
     @T.callback_query_handler(func=lambda call: call.data == '/query' or call.data == '/reply' or call.data.startswith('/unit'))
-    def callback_worker(call: types.CallbackQuery):
-        CllFrmUsrId = call.from_user.id
+    def callback_handler(call: types.CallbackQuery):
+        global my_message
         if call.data == "/query":
-            SendMes(CllFrmUsrId, "Напишите ваше имя, фамилию, должность")
+            SendMes(call.from_user.id, "Напишите ваше имя, фамилию, должность")
             RNSH(call.message, get_name_surname)
         elif call.data == "/reply":
-            SendMes(CllFrmUsrId, "Напишите ID для ответа")
+            SendMes(call.from_user.id, "Напишите ID для ответа")
             RNSH(call.message, get_reply_query_id)
-        elif call.data.startswith("/unit"):
-            # SendMes(CllFrmUsrId, "Напишите ID для ответа")
+        elif call.data.startswith('/unit'):
+            print(call.message.text)
+            unit_id = int(call.data[6:])
+            save_order(my_message, unit_id)
             RNSH(call.message, get_query)
 
     T.polling(none_stop=True, interval=1)
