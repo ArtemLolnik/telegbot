@@ -1,7 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import Label, Button, Entry, Listbox
-from connect import get_units_name, save_user_for_button
+from connect import save_user_for_button, get_units_name
+
 
 def add_user():
     user_id = entry_id.get()
@@ -10,11 +11,11 @@ def add_user():
     position = entry_position.get()
     department = combo_department.get()
     print(f"""Пользователь:
-user_id: {user_id}
-lastname: {lastname}
-name: {name}
-position: {position}
-department: {department}""")
+        user_id: {user_id}
+        lastname: {lastname}
+        name: {name}
+        position: {position}
+        department: {department}""")
     save_user_for_button(user_id,name,lastname)
 
 

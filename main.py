@@ -1,8 +1,9 @@
 import telebot
 import tfb
 from telebot import types
-from connect import save_applicant, search_user_tg, save_order, get_units, get_unit_id
+from connect import save_applicant, search_user_tg, save_order, get_units, get_unit_id, get_users_for_unit
 from os import system
+
 
 T = telebot.TeleBot(tfb.token)
 my_message = None
@@ -65,9 +66,9 @@ try:
         key_query = types.InlineKeyboardButton(text='Отправить заявку', callback_data='/query')
         key_reply = types.InlineKeyboardButton(text='Ответить на заявку', callback_data='/reply')
         KeyboardInline.add(key_query)
-        if message.from_user.id in [662653372, 544333900]:
+        if message.from_user.id in [662653372, 544333900, 915938977]:
             KeyboardInline.add(key_reply)
-        if message.from_user.id in [662653372, 544333900]:
+        if message.from_user.id in [662653372, 544333900, 915938977]:
             SendMes(message.from_user.id, "/query - отправить заявку в отдел IT.\n/reply - ответить на заявку.", reply_markup=KeyboardInline)
         else:
             SendMes(message.from_user.id, "/query - отправить заявку в отдел IT.", reply_markup=KeyboardInline)
@@ -82,16 +83,20 @@ try:
 
     # Отчет
     def get_query(message):
-        print(f"Заявка: {message.text}")
+        # print(f"Заявка: {message.text}")
 
         K = types.InlineKeyboardMarkup()
         key_reply_sender = types.InlineKeyboardButton(text='Ответить', callback_data='/reply')
         K.add(key_reply_sender)
         SendMes(message.from_user.id, "Ваша заявка отправлена.\nОжидайте ответа.")
+        user_unit_id = get_unit_id(key_reply_sender.text)
+        users = get_users_for_unit(user_unit_id)
         if user != "":
-            SendMes(662653372, f"Пользователь '{user}' с ID {message.from_user.id} написал: {message.text}")
+            for i in users:
+                SendMes(i, f"Пользователь '{user}' с ID {message.from_user.id} написал: {message.text}")
         else:
-            SendMes(662653372, f"Пользователь '{FrstScndNmNPst}' с ID {message.from_user.id} написал: {message.text}", reply_markup=K)
+            for i in users:
+                SendMes(i, f"Пользователь '{FrstScndNmNPst}' с ID {message.from_user.id} написал: {message.text}", reply_markup=K)
 
     # Функции для ответа на заявку
     # Ввод ID
@@ -115,6 +120,8 @@ try:
     # Ввод ответа и отчет
     def get_reply_query(message):
         global USER_ID
+
+
         SendMes(USER_ID, f"Пользователь '{ITFrstScndNmNPst}' из отдела IT написал: {message.text}.")
         print(f"Пользователь '{ITFrstScndNmNPst}' из отдела IT написал: {message.text}.")
         SendMes(message.from_user.id, "Ответ доставлен.")

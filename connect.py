@@ -1,7 +1,6 @@
 import pyodbc
 from datetime import datetime
 
-
 try:
     SERVER = 'KLIMENT-FIS\\SQLEXPRESS'
     DATABASE = 'tg_bot_db'
@@ -117,3 +116,54 @@ def get_unit_id(name):
     conn.close()
 
     return result
+
+def get_users_for_unit(unit_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    # Получаем applicant_id
+    applicant_query = f"SELECT tg_id FROM table_staff WHERE id_unit = {unit_id}"
+    cursor.execute(applicant_query)
+    result = cursor.fetchall()
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    return result
+
+def get_units_name():
+    units = []
+    cursor = conn.cursor()
+
+    applicant_query = "SELECT name_unit FROM unit_table"
+    cursor.execute(applicant_query)
+    results = cursor.fetchall()
+
+    for row in results:
+        unit_name = row[0]
+        units.append(unit_name)
+
+    cursor.close()
+    conn.close()
+
+    return units
+
+
+def save_user_for_button(id_tg, imya, familiya):
+    conn = get_connection()
+    cursor = conn.cursor()
+    query = "INSERT INTO table_staff (id_tg_staff, imya_staff, familiya_staff, id_unit, id_post) VALUES (?, ?, ?, ?, ?)"
+    unit_id = get_unit_id()
+    params = (id_tg, imya, familiya, 1010, 1)
+    cursor.execute(query, params)
+    conn.commit()
+    print("Пользователь успешно добавлен")
+    conn.close()
+
+def get_unit_for_user(user_tg_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+    query = f"SELECT unit_id FROM applicant_table WHERE tg_id = {user_tg_id}"
+    cursor.execute(query, user_tg_id)
+    conn.commit()
+    conn.close()
