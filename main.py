@@ -4,9 +4,10 @@ from telebot import types
 from connect import save_applicant, search_user_tg, save_order, get_units, get_unit_id, get_users_for_unit
 from os import system
 
-
 T = telebot.TeleBot(tfb.token)
 my_message = None
+FrstScndNmNPst = None
+user = ""
 # Подтверждает начало работы
 print("Я начал работу!")
 
@@ -82,21 +83,21 @@ try:
         SendMes(message.from_user.id, "Выберите отдел", reply_markup=Units)
 
     # Отчет
-    def get_query(message):
-        # print(f"Заявка: {message.text}")
+    def get_query(call, message_text):
+        # print(f"Заявка: {message_text}")
 
         K = types.InlineKeyboardMarkup()
         key_reply_sender = types.InlineKeyboardButton(text='Ответить', callback_data='/reply')
         K.add(key_reply_sender)
-        SendMes(message.from_user.id, "Ваша заявка отправлена.\nОжидайте ответа.")
-        user_unit_id = get_unit_id(key_reply_sender.text)
+        SendMes(call.from_user.id, "Ваша заявка отправлена.\nОжидайте ответа.")
+        user_unit_id = get_unit_id(call.data.split('_')[1])
         users = get_users_for_unit(user_unit_id)
         if user != "":
             for i in users:
-                SendMes(i, f"Пользователь '{user}' с ID {message.from_user.id} написал: {message.text}")
+                SendMes(i, f"Пользователь '{user}' с ID {call.from_user.id} написал: {message_text}")
         else:
             for i in users:
-                SendMes(i, f"Пользователь '{FrstScndNmNPst}' с ID {message.from_user.id} написал: {message.text}", reply_markup=K)
+                SendMes(i, f"Пользователь '{FrstScndNmNPst}' с ID {call.from_user.id} написал: {message_text}", reply_markup=K)
 
     # Функции для ответа на заявку
     # Ввод ID
@@ -120,8 +121,6 @@ try:
     # Ввод ответа и отчет
     def get_reply_query(message):
         global USER_ID
-
-
         SendMes(USER_ID, f"Пользователь '{ITFrstScndNmNPst}' из отдела IT написал: {message.text}.")
         print(f"Пользователь '{ITFrstScndNmNPst}' из отдела IT написал: {message.text}.")
         SendMes(message.from_user.id, "Ответ доставлен.")
@@ -138,10 +137,10 @@ try:
             SendMes(call.from_user.id, "Напишите ID для ответа")
             RNSH(call.message, get_reply_query_id)
         elif call.data.startswith('/unit'):
-            print(call.message.text)
+            print(my_message.text)
             unit_id = int(call.data[6:])
             save_order(my_message, unit_id)
-            RNSH(call.message, get_query)
+            get_query(call, my_message.text)
 
     T.polling(none_stop=True, interval=1)
 
